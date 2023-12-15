@@ -115,6 +115,50 @@ namespace CRUDWithADONet.DAL
 
         }
 
+        public bool InsertStudent(Student model)
+        {
+            Int64 i = 0;
+            try
+            {
+                using (SqlConnection connect = new SqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using (SqlCommand cmd = new SqlCommand("insert_student", connect))
+                    {
+                        connect.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@id", SqlDbType.Int).Direction = ParameterDirection.Output;
+                        cmd.Parameters.AddWithValue("@first_name", model.first_name);
+                        cmd.Parameters.AddWithValue("@middle_name", model.middle_name);
+                        cmd.Parameters.AddWithValue("@last_name", model.last_name);
+                        cmd.Parameters.AddWithValue("@date_of_birth", model.date_of_birth);
+                        cmd.Parameters.AddWithValue("@course_name", model.course_name);
+                        
+                        cmd.ExecuteNonQuery();
+                        i = Convert.ToInt64(cmd.Parameters["@id"].Value.ToString());
+
+                        if (i > 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //logger.Error(ex);
+                //FileLogHelper.log_message_fields("ERROR", "AddClient | Exception ->" + ex.Message);
+            }
+
+
+            return false;
+
+        }
+
         public DataTable GetRecords(string module, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "")
         {
             DataTable dt = new DataTable();
@@ -214,6 +258,39 @@ namespace CRUDWithADONet.DAL
             return employeeList;
         }
 
+        public List<Student> GetStudents()
+        {
+            List<Student> studentList = new List<Student>();
+
+            try
+            {
+                DataTable dt = new DataTable();
+
+                dt = GetRecords("student_list");
+
+                foreach (DataRow dr in dt.Rows)
+                {
+                    studentList.Add(
+                    new Student
+                    {
+                        id = Convert.ToInt64(dr["id"]),
+                        first_name = Convert.ToString(dr["first_name"]),
+                        middle_name = Convert.ToString(dr["middle_name"]),
+                        last_name = Convert.ToString(dr["last_name"]),
+                        date_of_birth = Convert.ToDateTime(dr["date_of_birth"]),
+                        course_name = Convert.ToString(dr["course_name"]),
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                //logger.Error(ex);
+                //FileLogHelper.log_message_fields("ERROR", "GetClients | Exception ->" + ex.Message);
+            }
+
+            return studentList;
+        }
+
 
         public bool Delete(Int64 id)
         {
@@ -222,7 +299,7 @@ namespace CRUDWithADONet.DAL
             {
                 using (SqlConnection connect = new SqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
                 {
-                    using (SqlCommand cmd = new SqlCommand("delete_employee", connect))
+                    using (SqlCommand cmd = new SqlCommand("delete_student", connect))
                     {
                         connect.Open();
                         cmd.CommandType = CommandType.StoredProcedure;
@@ -251,6 +328,46 @@ namespace CRUDWithADONet.DAL
                 //FileLogHelper.log_message_fields("ERROR", "AddClient | Exception ->" + ex.Message);
             }
         }
+
+
+        public bool DeleteEmployee(Int64 id)
+        {
+            Int64 i = 0;
+            try
+            {
+                using (SqlConnection connect = new SqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using (SqlCommand cmd = new SqlCommand("delete_employee", connect))
+                    {
+                        connect.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@id", id);
+
+
+                        i = (Int64)cmd.ExecuteNonQuery();
+
+                        if (i >= 1)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                    }
+                }
+            }
+
+            catch (Exception)
+            {
+                throw;
+                //logger.Error(ex);
+                //FileLogHelper.log_message_fields("ERROR", "AddClient | Exception ->" + ex.Message);
+            }
+        }
+
+
         public bool Update(Employee model)
         {
             int i = 0;
@@ -292,6 +409,48 @@ namespace CRUDWithADONet.DAL
             }
         }
 
+
+        public bool UpdateStudent(Student model)
+        {
+            int i = 0;
+            try
+            {
+                using (SqlConnection connect = new SqlConnection(GetDataBaseConnection(DataBaseObject.HostDB)))
+                {
+                    using (SqlCommand cmd = new SqlCommand("update_student", connect))
+                    {
+                        connect.Open();
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@id", model.id);
+                        cmd.Parameters.AddWithValue("@first_name", model.first_name);
+                        cmd.Parameters.AddWithValue("@middle_name", model.middle_name);
+                        cmd.Parameters.AddWithValue("@last_name", model.last_name);
+                        cmd.Parameters.AddWithValue("@date_of_birth", model.date_of_birth);
+                        cmd.Parameters.AddWithValue("@course_name", model.course_name);
+                        
+
+                        i = (int)cmd.ExecuteNonQuery();
+
+                        if (i > 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                    }
+                }
+            }
+
+            catch (Exception)
+            {
+                throw;
+                //logger.Error(ex);
+                //FileLogHelper.log_message_fields("ERROR", "AddClient | Exception ->" + ex.Message);
+            }
+        }
     }
 
 }

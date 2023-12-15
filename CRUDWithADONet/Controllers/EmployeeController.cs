@@ -68,6 +68,15 @@ namespace CRUDWithADONet.Controllers
             }
         }
 
+
+
+
+
+
+
+
+
+
         [HttpGet]
         public IActionResult Delete(Int64 id)
          {
@@ -138,7 +147,7 @@ namespace CRUDWithADONet.Controllers
             try
             {
                 
-                bool result = _dal.Delete(model.id);
+                bool result = _dal.DeleteEmployee(model.id);
 
                 
                     if (!result)
@@ -162,6 +171,23 @@ namespace CRUDWithADONet.Controllers
             
             //return employeeList;
         }
+
+
+
+
+
+
+       
+
+
+
+
+
+
+
+
+
+
 
         [HttpGet]
         public IActionResult Edit(Int64 id)

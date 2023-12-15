@@ -11,10 +11,12 @@
   <ItemGroup>
     <None Remove="DAL\" />
     <None Remove="Views\Employee\" />
+    <None Remove="Views\Student\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DAL\" />
     <Folder Include="Views\Employee\" />
+    <Folder Include="Views\Student\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
